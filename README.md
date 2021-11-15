@@ -1,3 +1,6 @@
+## fork note:
+原作者的wsl圖片剪貼版功能失敗，我有小改方法。原理都是呼叫powershell寫入clipboard的檔案。
+
 # md-img-paste.vim
 Yet simple tool to paste images into markdown files
 
