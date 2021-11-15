@@ -62,7 +62,7 @@ function! s:SaveFileTMPWSL(imgdir, tmpname) abort
     " if result ==# "good"
     
     if result == ""
-      call system("cp /mnt/c/temp/temp.png " . tmpfile)
+      call system("cp /mnt/c/temp/temp.jpg " . tmpfile)
       return tmpfile
     else
       return 1
