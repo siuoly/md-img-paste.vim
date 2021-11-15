@@ -29,32 +29,43 @@ endfunction
 
 function! s:SaveFileTMPWSL(imgdir, tmpname) abort
     let tmpfile = a:imgdir . '/' . a:tmpname . '.png'
-    let tmpfile = substitute(tmpfile, "\/", "\\\\\\", "g")
-    if tmpfile =~ "mnt"
-        let tmpfile = substitute(tmpfile, "\\\\\\\\mnt\\\\\\\\c", "C:", "g")
-    else
-        let tmpfile = '\\\\wsl\$\\Ubuntu'.tmpfile
-    endif
+    echom tmpfile
 
-    let clip_command = 'powershell.exe -sta "Add-Type -Assembly PresentationCore;'.
-          \'\$img = [Windows.Clipboard]::GetImage();'.
-          \'if (\$img -eq \$null) {'.
-          \'echo "Do not contain image.";'.
-          \'Exit;'.
-          \'} else{'.
-          \'echo "good";}'.
-          \'\$fcb = new-object Windows.Media.Imaging.FormatConvertedBitmap(\$img, [Windows.Media.PixelFormats]::Rgb24, \$null, 0);'.
-          \'\$file = \"'. tmpfile . '\";'.
-          \'\$stream = [IO.File]::Open(\$file, \"OpenOrCreate\");'.
-          \'\$encoder = New-Object Windows.Media.Imaging.PngBitmapEncoder;'.
-          \'\$encoder.Frames.Add([Windows.Media.Imaging.BitmapFrame]::Create(\$fcb));'.
-          \'\$encoder.Save(\$stream);\$stream.Dispose();"'
+    " let tmpfile = substitute(tmpfile, "\/", "\\\\\\", "g")
+    " if tmpfile =~ "mnt"
+    "     let tmpfile = substitute(tmpfile, "\\\\\\\\mnt\\\\\\\\c", "C:", "g")
+    " else
+    "     let tmpfile = '\\\\wsl\$\\Ubuntu'.tmpfile
+    " endif
+    " let clip_command = 
+    "     'powershell.exe -sta "Add-Type -Assembly PresentationCore;'.
+    "       \'\$img = [Windows.Clipboard]::GetImage();'.
+    "       \'if (\$img -eq \$null) {'.
+    "       \'echo "Do not contain image.";'.
+    "       \'Exit;'.
+    "       \'} else{'.
+    "       \'echo "good";}'.
+    "       \'\$fcb = new-object Windows.Media.Imaging.FormatConvertedBitmap(\$img, [Windows.Media.PixelFormats]::Rgb24, \$null, 0);'.
+    "       \'\$file = \"'. tmpfile . '\";'.
+    "       \'\$stream = [IO.File]::Open(\$file, \"OpenOrCreate\");'.
+    "       \'\$encoder = New-Object Windows.Media.Imaging.PngBitmapEncoder;'.
+    "       \'\$encoder.Frames.Add([Windows.Media.Imaging.BitmapFrame]::Create(\$fcb));'.
+    "       \'\$encoder.Save(\$stream);\$stream.Dispose();"'
 
-    let result = system(clip_command)[:-3]
-    if result ==# "good"
-        return tmpfile
+    " louis change,  "
+    let clip_command='powershell.exe  "' . 
+          \'\$img = get-clipboard -format image;' .
+          \'\$img.save(\"c:\\temp\\temp.jpg\");"'
+    let result = system(clip_command)
+
+    " let result = system(clip_command)[:-3]
+    " if result ==# "good"
+    
+    if result == ""
+      call system("cp /mnt/c/temp/temp.png " . tmpfile)
+      return tmpfile
     else
-        return 1
+      return 1
     endif
 endfunction
 
